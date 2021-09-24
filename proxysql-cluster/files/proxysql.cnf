@@ -2,8 +2,11 @@ datadir="/var/lib/proxysql"
 
 admin_variables=
 {
-  admin_credentials="admin:admin;radmin:radmin"
+  admin_credentials="admin:*4255D82DABE59495D8E0ADC93D06F3655058AAF7;radmin:*4255D82DABE59495D8E0ADC93D06F3655058AAF7"
   mysql_ifaces="0.0.0.0:6032"
+  web_enabled=true
+  restapi_enabled=true
+  restapi_port=6070
 }
 
 mysql_variables=
@@ -37,14 +40,13 @@ mysql_variables=
 mysql_servers =
 (
 	{ address="mysql-8.default.svc.cluster.local" , port=3306 , hostgroup=1, max_connections=5000 },
-        { address="mysql-8-slave.default.svc.cluster.local" , port=3306 , hostgroup=1, max_connections=5000 },
 )
 
 
 # defines all the MySQL users
 mysql_users:
 (
-	{ username = "root" , password = "XHCO2ydDXj" , default_hostgroup = 0 , active = 1 }
+	{ username = "root" , password = "*1DF70BBA8604A3E6F2885300387AD37C1DC7D3AB" , default_hostgroup = 0 , active = 1 }
 )
 
 

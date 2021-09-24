@@ -14,3 +14,22 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "proxysql.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "proxysql.fullname" . }}-admin
+  labels:
+{{ include "proxysql.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.serviceAdmin.type }}
+  ports:
+    - port: {{ .Values.serviceAdmin.port }}
+      targetPort: 6032
+      protocol: TCP
+      name: proxysql
+  selector:
+    app.kubernetes.io/name: {{ include "proxysql.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

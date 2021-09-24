@@ -84,3 +84,16 @@ mysql_replication_hostgroups=
        }
 )
 
+restapi:
+(
+    {
+        id=1
+        active=1
+        interval_ms=1000
+        method="POST"
+        uri="export_users"
+        script="./scripts/export_users.py"
+        comment="comment"
+    }
+)
+

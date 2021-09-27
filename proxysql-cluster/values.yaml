@@ -5,8 +5,8 @@
 replicaCount: 2
 
 image:
-  repository: proxysql/proxysql
-  tag: 2.3.1_arm64
+  repository: docker.io/library/local-proxysql
+  tag: "2.3.1"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

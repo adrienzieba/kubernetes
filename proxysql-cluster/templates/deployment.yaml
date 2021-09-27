@@ -16,6 +16,10 @@ spec:
         app.kubernetes.io/name: {{ include "proxysql.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1050
+        runAsGroup: 0
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -46,6 +50,12 @@ spec:
               subPath: proxysql.cnf
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            exec:
+              command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
+          readinessProbe:
+            exec:
+              command: ["/bin/bash","/usr/local/bin/probe-proxysql.bash"]
     {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

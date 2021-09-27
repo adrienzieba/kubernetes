@@ -18,8 +18,6 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1050
-        runAsGroup: 0
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -28,6 +26,11 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash","-c"]
+          args: ["envsubst < /etc/proxysql-template.cnf > /var/lib/proxysql/proxysql.cnf && proxysql -f -c /var/lib/proxysql/proxysql.cnf -D /var/lib/proxysql"]
+          envFrom:
+          - secretRef:
+              name: proxysql-secret
           ports:
             - name: proxysql
               containerPort: 6033
@@ -46,7 +49,7 @@ spec:
               mountPath: /usr/local/bin/probe-proxysql.bash
               subPath: probe-proxysql.bash
             - name: {{ .Release.Name }}-config
-              mountPath: /etc/proxysql.cnf
+              mountPath: /etc/proxysql-template.cnf
               subPath: proxysql.cnf
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

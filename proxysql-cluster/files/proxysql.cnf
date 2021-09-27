@@ -2,7 +2,7 @@ datadir="/var/lib/proxysql"
 
 admin_variables=
 {
-  admin_credentials="admin:*4255D82DABE59495D8E0ADC93D06F3655058AAF7;radmin:*4255D82DABE59495D8E0ADC93D06F3655058AAF7"
+  admin_credentials="admin:${ADMIN_PASSWORD};radmin:*4255D82DABE59495D8E0ADC93D06F3655058AAF7"
   mysql_ifaces="0.0.0.0:6032"
   web_enabled=true
   restapi_enabled=true
@@ -22,8 +22,8 @@ mysql_variables=
   stacksize=1048576
   server_version="8.0.20"
   connect_timeout_server=3000
-  monitor_username="monitor"
-  monitor_password="monitor"
+  monitor_username="${MONITOR_USERNAME}"
+  monitor_password="${MONITOR_PASSWORD}"
   monitor_history=600000
   monitor_connect_interval=5000
   monitor_ping_interval=2000
@@ -54,20 +54,6 @@ mysql_users:
 #defines MySQL Query Rules
 mysql_query_rules:
 (
-	{
-		rule_id=1
-		active=1
-		match_pattern="^SELECT .* FOR UPDATE$"
-		destination_hostgroup=0
-		apply=1
-	},
-	{
-		rule_id=2
-		active=1
-		match_pattern="^SELECT"
-		destination_hostgroup=1
-		apply=1
-	}
 )
 
 scheduler=

@@ -30,9 +30,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/bash","-c"]
           args: ["envsubst < /etc/proxysql-template.cnf > /var/lib/proxysql/proxysql.cnf && proxysql -f -c /var/lib/proxysql/proxysql.cnf -D /var/lib/proxysql"]
-          envFrom:
-          - secretRef:
-              name: proxysql-secret
+          env:
+          - name: ADMIN_PASSWORD
+            value: cool
           ports:
             - name: proxysql
               containerPort: 6033
@@ -51,8 +51,14 @@ spec:
               mountPath: /usr/local/bin/probe-proxysql.bash
               subPath: probe-proxysql.bash
             - name: {{ .Release.Name }}-config
+              mountPath: /usr/local/bin/cleanup-digest.bash
+              subPath: cleanup-digest.bash
+            - name: {{ .Release.Name }}-config
               mountPath: /etc/proxysql-template.cnf
               subPath: proxysql.cnf
+            - mountPath: "/var/lib/proxysql/creds"
+              name: credentials
+              readOnly: true
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           livenessProbe:
@@ -77,3 +83,7 @@ spec:
         - name: {{ .Release.Name }}-config
           configMap:
             name: {{ .Release.Name }}-proxysqlcm
+            defaultMode: 0755
+        - name: credentials
+          secret:
+            secretName: proxysql-secret
